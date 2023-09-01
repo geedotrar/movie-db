@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { fetchHorrorMovies } from "../../api/api";
 import Navbar from "@/src/components/Navbar";
 import DetailMovies from "./DetailMovies";
+import Image from "next/image";
 
 export default function HorrorMovies() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -73,7 +74,7 @@ export default function HorrorMovies() {
             horrorMovies.map((movie: any) => (
               <div key={movie.id}>
                 <div className="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
-                  <img onClick={() => onDetail(movie.id)} src={`${process.env.NEXT_PUBLIC_IMG_PATH}/${movie.poster_path}`} alt="Popular-Movies" className="cursor-pointer" />
+                  <Image onClick={() => onDetail(movie.id)} src={`${process.env.NEXT_PUBLIC_IMG_PATH}/${movie.poster_path}`} alt={movie.title} width={500} height={750} className="cursor-pointer" />
                   <div className="tes px-4 py-3 w-72">
                     <div className="d-flex h-2 ">
                       <p className="text-xs font-bold text-black block capitalize">{movie.title}</p>

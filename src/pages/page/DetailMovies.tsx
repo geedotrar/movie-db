@@ -1,11 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { RiYoutubeLine } from "react-icons/ri";
 
 export default function DetailMovies(props: any) {
-  // let findData = props.data.find((dt: any) => dt.id === props.id);
-  // const date = new Date(findData.release_date).toLocaleDateString("en-GB");
-  // console.log(findData);
   const [movieData, setMovieData] = useState<any>(null);
 
   useEffect(() => {
