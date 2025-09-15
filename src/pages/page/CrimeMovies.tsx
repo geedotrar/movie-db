@@ -3,11 +3,17 @@ import { fetchCrimeMovies } from "../../api/api";
 import Navbar from "../../components/Navbar";
 import DetailMovies from "./DetailMovies";
 import Image from "next/image";
+import Head from "next/head";
 
-export default function ActionMovie() {
+function getImageUrl(path: string | null, size = "w500") {
+  if (!path) return "/fallback.jpg";
+  return `https://image.tmdb.org/t/p/${size}${path}`;
+}
+
+export default function CrimeMovies() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [crimeMovies, setcrimeMovies] = useState([]);
-  const [defaultMovies, setDefaultMovies] = useState([]);
+  const [crimeMovies, setCrimeMovies] = useState<any[]>([]);
+  const [defaultMovies, setDefaultMovies] = useState<any[]>([]);
   const [id, setId] = useState<any>();
   const [display, setDisplay] = useState(false);
 
@@ -16,17 +22,19 @@ export default function ActionMovie() {
     setSearchQuery(query);
 
     if (query.trim() === "") {
-      setcrimeMovies(defaultMovies);
+      setCrimeMovies(defaultMovies);
       return;
     }
 
-    const filteredMovies = defaultMovies.filter((movie: any) => movie.title.toLowerCase().includes(query.toLowerCase()));
-    setcrimeMovies(filteredMovies);
+    const filteredMovies = defaultMovies.filter((movie: any) =>
+      movie.title.toLowerCase().includes(query.toLowerCase())
+    );
+    setCrimeMovies(filteredMovies);
   };
 
   const handleCancel = () => {
     setSearchQuery("");
-    setcrimeMovies(defaultMovies);
+    setCrimeMovies(defaultMovies);
   };
 
   const onDetail = (id: any) => {
@@ -37,7 +45,7 @@ export default function ActionMovie() {
   useEffect(() => {
     fetchCrimeMovies()
       .then((crimeMovies) => {
-        setcrimeMovies(crimeMovies);
+        setCrimeMovies(crimeMovies);
         setDefaultMovies(crimeMovies);
       })
       .catch((error) => {
@@ -47,50 +55,79 @@ export default function ActionMovie() {
 
   return (
     <div className="bg-cover min-h-screen background-crime">
+      <Head>
+        <title>Stevan Movie&apos;s DB - Crime</title>
+        <link rel="icon" href="/popcorn.png" />
+      </Head>
+
       <Navbar />
       {display && <DetailMovies setDisplay={setDisplay} id={id} data={crimeMovies} />}
-      <h1 className="flex justify-center text-4xl text-white pt-4 pb-4">Crime Movies</h1>
+
+      <h1 className="flex justify-center text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg pt-6 pb-6">
+        Crime Movies
+      </h1>
+
       <div className="flex items-center justify-center gap-2">
-        <div className="relative w-1/3">
+        <div className="relative w-2/3 md:w-1/3">
           <input
             type="text"
             value={searchQuery}
             onChange={handleSearch}
-            placeholder="Search by title"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="🔍 Search crime movies..."
+            className="w-full px-4 py-2 rounded-full border border-gray-400 bg-white/80 text-gray-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none shadow-md"
           />
         </div>
-        {searchQuery === "" ? (
-          <></>
-        ) : (
-          <button className="bg-red-500 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-full" onClick={handleCancel}>
-            cancel
+        {searchQuery !== "" && (
+          <button
+            className="bg-red-500 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-full shadow-lg transition"
+            onClick={handleCancel}
+          >
+            Cancel
           </button>
         )}
       </div>
-      <div>
-        <section className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 p-5 ">
-          {crimeMovies.length > 0 ? (
-            crimeMovies.map((movie: any) => (
-              <div key={movie.id}>
-                <div className="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
-                  <Image onClick={() => onDetail(movie.id)} src={`${process.env.NEXT_PUBLIC_IMG_PATH}/${movie.poster_path}`} alt={movie.title} width={500} height={750} className="cursor-pointer" />
-                  <div className="tes px-4 py-3 w-72">
-                    <div className="d-flex h-2 ">
-                      <p className="text-xs font-bold text-black  block capitalize">{movie.title}</p>
-                    </div>
-                    <div className="flex items-center pt-4"></div>
-                  </div>
+
+      <section className="w-fit mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center gap-y-16 gap-x-10 mt-12 p-6">
+        {crimeMovies.length > 0 ? (
+          crimeMovies.map((movie: any) => (
+            <div
+              key={movie.id}
+              className="group relative w-72 bg-white/90 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl"
+            >
+              <Image
+                onClick={() => onDetail(movie.id)}
+                src={getImageUrl(movie.poster_path)}
+                alt={movie.title}
+                width={500}
+                height={750}
+                className="cursor-pointer object-cover h-[400px] w-full"
+              />
+
+              <div className="p-4">
+                <h2 className="text-lg font-bold text-gray-900 truncate group-hover:text-blue-600 transition">
+                  {movie.title}
+                </h2>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-sm text-gray-600">
+                    ⭐ {movie.vote_average?.toFixed(1) || "N/A"}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {movie.release_date
+                      ? new Date(movie.release_date).getFullYear()
+                      : "Unknown"}
+                  </p>
                 </div>
               </div>
-            ))
-          ) : (
-            <div className="min-h-screen">
-              <h1 className="text-4xl text-white pt-4 pb-4 ">No film found... </h1>
             </div>
-          )}
-        </section>
-      </div>
+          ))
+        ) : (
+          <div className="min-h-screen">
+            <h1 className="text-3xl text-white text-center pt-10">
+              No crime movies found
+            </h1>
+          </div>
+        )}
+      </section>
     </div>
   );
 }
