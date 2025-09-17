@@ -22,8 +22,8 @@ export default function DetailMovies(props: any) {
   const date = new Date(movieData.release_date).toLocaleDateString("en-GB");
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="relative w-full max-w-3xl bg-white/10 backdrop-blur-md border border-gray-700 rounded-2xl shadow-2xl overflow-hidden max-h-screen">
+    <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+      <div className="relative w-full max-w-3xl bg-white/10 backdrop-blur-md border border-gray-700 rounded-2xl shadow-2xl max-h-screen flex flex-col">
         <button
           onClick={() => props.setDisplay(false)}
           className="absolute top-4 right-4 text-3xl font-bold text-white hover:text-red-500 transition"
@@ -31,7 +31,7 @@ export default function DetailMovies(props: any) {
           ×
         </button>
 
-        <div className="px-6 pt-6 border-b border-gray-600">
+        <div className="px-6 pt-6 pb-4 border-b border-gray-600">
           <h3 className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-md">
             {movieData.title}{" "}
             <span className="text-yellow-400 text-lg">⭐ {movieData.vote_average.toFixed(1)}</span>
@@ -41,29 +41,31 @@ export default function DetailMovies(props: any) {
           </p>
         </div>
 
-        <div className="p-6 flex flex-col md:flex-row gap-6 overflow-y-auto">
-          <div className="flex-shrink-0">
-            <Image
-              src={`${process.env.NEXT_PUBLIC_IMG_PATH}${movieData.poster_path}`}
-              alt={movieData.title}
-              width={220}
-              height={330}
-              className="rounded-lg shadow-lg"
-            />
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-6 flex flex-col md:flex-row gap-6">
+            <div className="flex-shrink-0">
+              <Image
+                src={`${process.env.NEXT_PUBLIC_IMG_PATH}${movieData.poster_path}`}
+                alt={movieData.title}
+                width={220}
+                height={330}
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+            <p className="text-gray-200 text-base leading-relaxed text-justify">
+              {movieData.overview || "No description available."}
+            </p>
           </div>
-          <p className="text-gray-200 text-base leading-relaxed text-justify">
-            {movieData.overview || "No description available."}
-          </p>
-        </div>
 
-        <div className="flex justify-center border-t border-gray-600 bg-black/20 p-4">
-          <Link
-            href={`/page/${movieData.id}`}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-lg flex items-center gap-2 shadow-md hover:shadow-red-500/40 transition duration-200"
-          >
-            <RiYoutubeLine size={26} />
-            WATCH THE TRAILER
-          </Link>
+          <div className="flex justify-center border-t border-gray-600 bg-black/20 p-4">
+            <Link
+              href={`/page/${movieData.id}`}
+              className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-lg flex items-center gap-2 shadow-md hover:shadow-red-500/40 transition duration-200"
+            >
+              <RiYoutubeLine size={26} />
+              WATCH THE TRAILER
+            </Link>
+          </div>
         </div>
       </div>
     </div>
