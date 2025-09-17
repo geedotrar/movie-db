@@ -23,7 +23,7 @@ export default function DetailMovies(props: any) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-3xl bg-white/10 backdrop-blur-md border border-gray-700 rounded-2xl shadow-2xl max-h-screen flex flex-col">
+      <div className="relative w-full max-w-3xl bg-white/10 backdrop-blur-md border border-gray-700 rounded-2xl shadow-2xl max-h-[90vh] flex flex-col mb-4">
         <button
           onClick={() => props.setDisplay(false)}
           className="absolute top-4 right-4 text-3xl font-bold text-white hover:text-red-500 transition"
