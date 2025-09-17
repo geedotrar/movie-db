@@ -75,12 +75,12 @@ export default function Navbar() {
                 <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#64ffda] group-hover:w-full transition-all duration-300"></span>
               </li>
 
-              <li className="text-white font-bold text-lg relative">
+              <li className="text-white font-bold text-lg relative group cursor-pointer">
                 <button
-                  className="rounded-lg px-3 py-1 flex items-center hover:text-[#64ffda] transition duration-300"
+                  className="rounded-lg py-1 flex items-center hover:text-[#64ffda] transition duration-300"
                   onClick={() => setOpenDropdown(!openDropdown)}
                 >
-                  <span className="mr-1">Genre</span>
+                  <p className="transition-colors duration-300 group-hover:text-[#64ffda]">Genre</p>
                   <svg
                     className={`fill-current h-4 w-4 transition-transform duration-300 ${
                       openDropdown ? "rotate-180" : ""
@@ -90,14 +90,15 @@ export default function Navbar() {
                   >
                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                   </svg>
+                  <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#64ffda] group-hover:w-full transition-all duration-300"></span>
                 </button>
 
                 {openDropdown && (
-                  <ul className="absolute left-0 mt-2 w-40 shadow-lg rounded-lg overflow-hidden bg-opacity-10 backdrop-blur-md">
+                  <ul className="mt-2 w-full md:w-40 md:absolute md:left-0 rounded-lg overflow-hidden bg-opacity-10 ">
                     {genres.map((item, i) => (
                       <li key={i}>
                         <Link
-                          className="block px-4 py-2 text-sm text-gray-200 hover:text-[#64ffda] transition"
+                          className="pl-10 block px-4 py-2 text-gray-200 hover:text-[#64ffda] transition"
                           href={item.href}
                           onClick={() => setOpenDropdown(false)}
                         >
