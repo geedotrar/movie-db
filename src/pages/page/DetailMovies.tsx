@@ -22,8 +22,8 @@ export default function DetailMovies(props: any) {
   const date = new Date(movieData.release_date).toLocaleDateString("en-GB");
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-3xl bg-white/10 backdrop-blur-md border border-gray-700 rounded-2xl shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
+      <div className="relative w-full max-w-3xl bg-white/10 backdrop-blur-md border border-gray-700 rounded-2xl shadow-2xl overflow-hidden max-h-screen">
         <button
           onClick={() => props.setDisplay(false)}
           className="absolute top-4 right-4 text-3xl font-bold text-white hover:text-red-500 transition"
@@ -41,7 +41,7 @@ export default function DetailMovies(props: any) {
           </p>
         </div>
 
-        <div className="p-6 flex flex-col md:flex-row gap-6">
+        <div className="p-6 flex flex-col md:flex-row gap-6 overflow-y-auto">
           <div className="flex-shrink-0">
             <Image
               src={`${process.env.NEXT_PUBLIC_IMG_PATH}${movieData.poster_path}`}
