@@ -11,6 +11,16 @@ export default function DetailMovies(props: any) {
     setMovieData(findData);
   }, [props.data, props.id]);
 
+  //handling scroll
+  useEffect(() => {
+    if (props.setDisplay) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   if (!movieData) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black/70 text-white">
@@ -26,13 +36,13 @@ export default function DetailMovies(props: any) {
       <div className="relative w-full max-w-3xl bg-white/10 backdrop-blur-md border border-gray-700 rounded-2xl shadow-2xl max-h-[90vh] flex flex-col mb-4">
         <button
           onClick={() => props.setDisplay(false)}
-          className="absolute top-4 right-4 text-3xl font-bold text-white hover:text-red-500 transition"
+          className="absolute top-4 right-4 z-50 flex items-center justify-center w-10 h-10 rounded-full bg-black/50 hover:bg-red-600 text-white text-2xl font-bold transition"
         >
           ×
         </button>
 
-        <div className="px-6 pt-6 pb-4 border-b border-gray-600">
-          <h3 className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-md">
+        <div className="px-6 pt-6 pb-4 pr-16 border-b border-gray-600">
+          <h3 className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-md break-words">
             {movieData.title}{" "}
             <span className="text-yellow-400 text-lg">⭐ {movieData.vote_average.toFixed(1)}</span>
           </h3>
