@@ -1,9 +1,10 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Navbar() {
   const [navbar, setNavbar] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const genres = [
     { name: "Popular", href: "/page/PopularMovies" },
@@ -12,13 +13,28 @@ export default function Navbar() {
     { name: "Drama", href: "/page/DramaMovies" },
   ];
 
+    useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="sticky top-0 z-50">
+    <div className={`sticky top-0 z-50 transition-all duration-500 ${scrolled ? "bg-black/40 backdrop-blur-md shadow-lg" : "bg-transparent"}`}>
       <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
         <div>
           <div className="flex items-center justify-between py-3 md:py-5 md:block">
-            <h2 className="text-2xl text-white font-extrabold tracking-wide hover:scale-105 transition-transform duration-300">
-              <Link href="/">Movie DB</Link>
+            <h2 className="text-3xl font-extrabold tracking-[0.15em] text-white 
+               drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] 
+               transition-all duration-300 ease-out 
+               hover:scale-110 hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.9)]">
+              <Link href="/">SMDB</Link>
             </h2>
 
             <div className="md:hidden">
@@ -98,7 +114,7 @@ export default function Navbar() {
                     {genres.map((item, i) => (
                       <li key={i}>
                         <Link
-                          className="pl-10 block px-4 py-2 text-gray-200 hover:text-[#64ffda] transition"
+                          className="pl-10 md:pl-0 block px-4 py-2 text-gray-200 hover:text-[#64ffda] transition"
                           href={item.href}
                           onClick={() => setOpenDropdown(false)}
                         >
