@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { fetchMovieDetails, fetchMovieVideos } from "../../api/api";
-import LoadingOverlay from "@/src/components/LoadingOverlay"; // import overlay
+import LoadingOverlay from "@/src/components/LoadingOverlay";
+import Head from "next/head";
 
 const MovieTrailer = () => {
   const router = useRouter();
@@ -49,6 +50,11 @@ const MovieTrailer = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center relative px-4 py-10">
+       <Head>
+        <title>Stevan Movie&apos;s DB - {movieData.title}</title>
+        <link rel="icon" href="/popcorn.png" />
+      </Head>
+
       {loading && <LoadingOverlay />}
 
       <button
