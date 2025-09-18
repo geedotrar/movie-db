@@ -51,7 +51,7 @@ const MovieTrailer = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center relative px-4 py-10">
        <Head>
-        Stevan Movie&apos;s DB {movieData ? `- ${movieData.title}` : ""}
+        <title>Stevan Movie&apos;s DB {movieData ? `- ${movieData.title}` : ""}</title>
         <link rel="icon" href="/popcorn.png" />
       </Head>
 
