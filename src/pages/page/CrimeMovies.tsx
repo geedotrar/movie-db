@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar";
 import DetailMovies from "./DetailMovies";
 import Image from "next/image";
 import Head from "next/head";
+import LoadingOverlay from "@/src/components/LoadingOverlay";
 
 function getImageUrl(path: string | null, size = "w500") {
   if (!path) return "/fallback.jpg";
@@ -16,6 +17,7 @@ export default function CrimeMovies() {
   const [defaultMovies, setDefaultMovies] = useState<any[]>([]);
   const [id, setId] = useState<any>();
   const [display, setDisplay] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleSearch = (event: any) => {
     const query = event.target.value;
@@ -43,6 +45,7 @@ export default function CrimeMovies() {
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchCrimeMovies()
       .then((crimeMovies) => {
         setCrimeMovies(crimeMovies);
@@ -50,15 +53,20 @@ export default function CrimeMovies() {
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
   return (
-    <div className="bg-cover min-h-screen background-crime">
+    <div className="bg-cover min-h-screen background-crime relative">
       <Head>
         <title>Stevan Movie&apos;s DB - Crime</title>
         <link rel="icon" href="/popcorn.png" />
       </Head>
+
+      {loading && <LoadingOverlay />}
 
       <Navbar />
       {display && <DetailMovies setDisplay={setDisplay} id={id} data={crimeMovies} />}
@@ -121,11 +129,13 @@ export default function CrimeMovies() {
             </div>
           ))
         ) : (
-          <div className="min-h-screen">
-            <h1 className="text-3xl text-white text-center pt-10">
-              No crime movies found
-            </h1>
-          </div>
+          !loading && (
+            <div className="min-h-screen">
+              <h1 className="text-3xl text-white text-center pt-10">
+                No popular movies found
+              </h1>
+            </div>
+          )
         )}
       </section>
     </div>

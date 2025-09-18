@@ -4,6 +4,7 @@ import Navbar from "@/src/components/Navbar";
 import DetailMovies from "./DetailMovies";
 import Image from "next/image";
 import Head from "next/head";
+import LoadingOverlay from "@/src/components/LoadingOverlay";
 
 function getImageUrl(path: string | null, size = "w500") {
   if (!path) return "/fallback.jpg";
@@ -16,6 +17,7 @@ export default function HorrorMovies() {
   const [defaultMovies, setDefaultMovies] = useState<any[]>([]);
   const [id, setId] = useState<any>();
   const [display, setDisplay] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleSearch = (event: any) => {
     const query = event.target.value;
@@ -43,6 +45,7 @@ export default function HorrorMovies() {
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchHorrorMovies()
       .then((horrorMovies) => {
         setHorrorMovies(horrorMovies);
@@ -50,15 +53,20 @@ export default function HorrorMovies() {
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
   return (
-    <div className="bg-cover min-h-screen background-horror">
+    <div className="bg-cover min-h-screen background-horror relative">
       <Head>
         <title>Stevan Movie&apos;s DB - Horror</title>
         <link rel="icon" href="/popcorn.png" />
       </Head>
+
+      {loading && <LoadingOverlay />}
 
       <Navbar />
       {display && <DetailMovies setDisplay={setDisplay} id={id} data={horrorMovies} />}
@@ -74,7 +82,7 @@ export default function HorrorMovies() {
             value={searchQuery}
             onChange={handleSearch}
             placeholder="🔍 Search horror movies..."
-            className="w-full px-4 py-2 rounded-full border border-gray-400 bg-white/80 text-gray-900 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none shadow-md"
+            className="w-full px-4 py-2 rounded-full border border-gray-400 bg-white/80 text-gray-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none shadow-md"
           />
         </div>
         {searchQuery !== "" && (
@@ -104,7 +112,7 @@ export default function HorrorMovies() {
               />
 
               <div className="p-4">
-                <h2 className="text-lg font-bold text-gray-900 truncate group-hover:text-red-600 transition">
+                <h2 className="text-lg font-bold text-gray-900 truncate group-hover:text-blue-600 transition">
                   {movie.title}
                 </h2>
                 <div className="flex items-center justify-between mt-2">
@@ -121,11 +129,13 @@ export default function HorrorMovies() {
             </div>
           ))
         ) : (
-          <div className="min-h-screen">
-            <h1 className="text-3xl text-white text-center pt-10">
-              No horror movies found
-            </h1>
-          </div>
+          !loading && (
+            <div className="min-h-screen">
+              <h1 className="text-3xl text-white text-center pt-10">
+                No horor movies found
+              </h1>
+            </div>
+          )
         )}
       </section>
     </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { fetchMovieDetails, fetchMovieVideos } from "../../api/api";
+import LoadingOverlay from "@/src/components/LoadingOverlay"; // import overlay
 
 const MovieTrailer = () => {
   const router = useRouter();
@@ -8,6 +9,7 @@ const MovieTrailer = () => {
 
   const [movieData, setMovieData] = useState<any>(null);
   const [trailerKey, setTrailerKey] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const closeButton = () => {
     router.back();
@@ -15,12 +17,15 @@ const MovieTrailer = () => {
 
   useEffect(() => {
     if (movieId) {
-      fetchMovieDetails(movieId as string)
-        .then((data) => setMovieData(data))
-        .catch((error) => console.error("Error fetching movie details:", error));
+      setLoading(true);
 
-      fetchMovieVideos(movieId as string)
-        .then((videos) => {
+      Promise.all([
+        fetchMovieDetails(movieId as string),
+        fetchMovieVideos(movieId as string),
+      ])
+        .then(([details, videos]) => {
+          setMovieData(details);
+
           const trailer = videos.find(
             (video: any) =>
               video.type === "Trailer" && video.site === "YouTube"
@@ -29,7 +34,12 @@ const MovieTrailer = () => {
             setTrailerKey(trailer.key);
           }
         })
-        .catch((error) => console.error("Error fetching movie videos:", error));
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [movieId]);
 
@@ -39,6 +49,8 @@ const MovieTrailer = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center relative px-4 py-10">
+      {loading && <LoadingOverlay />}
+
       <button
         onClick={closeButton}
         className="absolute top-6 right-6 text-white text-4xl font-bold hover:text-red-500 transition"
@@ -46,35 +58,37 @@ const MovieTrailer = () => {
         ×
       </button>
 
-      <div className="w-full max-w-4xl bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden border border-gray-700">
-        {movieData && (
-          <div className="px-6 pt-6 text-center">
-            <h1 className="text-3xl md:text-4xl font-extrabold text-white drop-shadow-md">
-              {movieData.title}
-            </h1>
-            {movieData.tagline && (
-              <p className="text-gray-300 italic mt-2">{movieData.tagline}</p>
-            )}
-          </div>
-        )}
-
-        <div className="relative w-full mt-6 pb-[56.25%]">
-          {embedUrl ? (
-            <iframe
-              title="YouTube Trailer"
-              src={embedUrl}
-              className="absolute top-0 left-0 w-full h-full rounded-b-2xl"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          ) : (
-            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 text-white text-lg">
-              Trailer not available
+      {!loading && (
+        <div className="w-full max-w-4xl bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden border border-gray-700">
+          {movieData && (
+            <div className="px-6 pt-6 text-center">
+              <h1 className="text-3xl md:text-4xl font-extrabold text-white drop-shadow-md">
+                {movieData.title}
+              </h1>
+              {movieData.tagline && (
+                <p className="text-gray-300 italic mt-2">{movieData.tagline}</p>
+              )}
             </div>
           )}
+
+          <div className="relative w-full mt-6 pb-[56.25%]">
+            {embedUrl ? (
+              <iframe
+                title="YouTube Trailer"
+                src={embedUrl}
+                className="absolute top-0 left-0 w-full h-full rounded-b-2xl"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            ) : (
+              <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 text-white text-lg">
+                Trailer not available
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

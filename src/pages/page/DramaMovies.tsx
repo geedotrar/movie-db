@@ -4,6 +4,7 @@ import Navbar from "@/src/components/Navbar";
 import DetailMovies from "./DetailMovies";
 import Image from "next/image";
 import Head from "next/head";
+import LoadingOverlay from "@/src/components/LoadingOverlay";
 
 function getImageUrl(path: string | null, size = "w500") {
   if (!path) return "/fallback.jpg";
@@ -16,6 +17,7 @@ export default function DramaMovies() {
   const [defaultMovies, setDefaultMovies] = useState<any[]>([]);
   const [id, setId] = useState<any>();
   const [display, setDisplay] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleSearch = (event: any) => {
     const query = event.target.value;
@@ -43,6 +45,7 @@ export default function DramaMovies() {
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchDramaMovies()
       .then((dramaMovies) => {
         setDramaMovies(dramaMovies);
@@ -50,11 +53,14 @@ export default function DramaMovies() {
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
   return (
-    <div className="bg-cover min-h-screen background-drama">
+    <div className="bg-cover min-h-screen background-drama relative">
       <Head>
         <title>Stevan Movie&apos;s DB - Drama</title>
         <link rel="icon" href="/popcorn.png" />
@@ -74,7 +80,7 @@ export default function DramaMovies() {
             value={searchQuery}
             onChange={handleSearch}
             placeholder="🔍 Search drama movies..."
-            className="w-full px-4 py-2 rounded-full border border-gray-400 bg-white/80 text-gray-900 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none shadow-md"
+            className="w-full px-4 py-2 rounded-full border border-gray-400 bg-white/80 text-gray-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none shadow-md"
           />
         </div>
         {searchQuery !== "" && (
@@ -104,7 +110,7 @@ export default function DramaMovies() {
               />
 
               <div className="p-4">
-                <h2 className="text-lg font-bold text-gray-900 truncate group-hover:text-purple-600 transition">
+                <h2 className="text-lg font-bold text-gray-900 truncate group-hover:text-blue-600 transition">
                   {movie.title}
                 </h2>
                 <div className="flex items-center justify-between mt-2">
@@ -121,11 +127,13 @@ export default function DramaMovies() {
             </div>
           ))
         ) : (
-          <div className="min-h-screen">
-            <h1 className="text-3xl text-white text-center pt-10">
-              No drama movies found
-            </h1>
-          </div>
+          !loading && (
+            <div className="min-h-screen">
+              <h1 className="text-3xl text-white text-center pt-10">
+                No drama movies found
+              </h1>
+            </div>
+          )
         )}
       </section>
     </div>

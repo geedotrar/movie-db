@@ -4,6 +4,7 @@ import Navbar from "@/src/components/Navbar";
 import DetailMovies from "./DetailMovies";
 import Image from "next/image";
 import Head from "next/head";
+import LoadingOverlay from "@/src/components/LoadingOverlay";
 
 function getImageUrl(path: string | null, size = "w500") {
   if (!path) return "/fallback.jpg";
@@ -16,6 +17,7 @@ export default function PopularMovies() {
   const [defaultMovies, setDefaultMovies] = useState<any[]>([]);
   const [id, setId] = useState<any>();
   const [display, setDisplay] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleSearch = (event: any) => {
     const query = event.target.value;
@@ -43,6 +45,7 @@ export default function PopularMovies() {
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchPopularMovies()
       .then((popularMovies) => {
         setPopularMovies(popularMovies);
@@ -50,15 +53,20 @@ export default function PopularMovies() {
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
   return (
-    <div className="bg-cover min-h-screen background">
+    <div className="bg-cover min-h-screen background relative">
       <Head>
         <title>Stevan Movie&apos;s DB - Popular</title>
         <link rel="icon" href="/popcorn.png" />
       </Head>
+
+      {loading && <LoadingOverlay />}
 
       <Navbar />
       {display && (
@@ -76,7 +84,7 @@ export default function PopularMovies() {
             value={searchQuery}
             onChange={handleSearch}
             placeholder="🔍 Search by title..."
-            className="w-full px-4 py-2 rounded-full border border-gray-400 bg-white/80 text-gray-900 text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none shadow-md"
+            className="w-full px-4 py-2 rounded-full border border-gray-400 bg-white/80 text-gray-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none shadow-md"
           />
         </div>
         {searchQuery !== "" && (
@@ -106,7 +114,7 @@ export default function PopularMovies() {
               />
 
               <div className="p-4">
-                <h2 className="text-lg font-bold text-gray-900 truncate group-hover:text-pink-600 transition">
+                <h2 className="text-lg font-bold text-gray-900 truncate group-hover:text-blue-600 transition">
                   {movie.title}
                 </h2>
                 <div className="flex items-center justify-between mt-2">
@@ -123,11 +131,13 @@ export default function PopularMovies() {
             </div>
           ))
         ) : (
-          <div className="min-h-screen">
-            <h1 className="text-3xl text-white text-center pt-10">
-              No popular movies found
-            </h1>
-          </div>
+          !loading && (
+            <div className="min-h-screen">
+              <h1 className="text-3xl text-white text-center pt-10">
+                No popular movies found
+              </h1>
+            </div>
+          )
         )}
       </section>
     </div>
