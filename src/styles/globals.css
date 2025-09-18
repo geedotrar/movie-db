@@ -27,7 +27,7 @@ body {
 
 .background {
   /* background-image: url(../public/3386851.jpg); */
-  background-image: url("../public/popular.jpg");
+  background-image: url("/popular.jpg");
   height: 100%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -36,7 +36,7 @@ body {
 }
 
 .background-crime {
-  background-image: url("../public/crime.jpg");
+  background-image: url("/crime.jpg");
   height: 100%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -44,7 +44,7 @@ body {
   background-attachment: fixed;
 }
 .background-horror {
-  background-image: url("../public/horror.jpg");
+  background-image: url("/horror.jpg");
   height: 100%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -52,7 +52,7 @@ body {
   background-attachment: fixed;
 }
 .background-drama {
-  background-image: url("../public/drama.jpg");
+  background-image: url("/drama.jpg");
   height: 100%;
   background-repeat: no-repeat;
   background-size: cover;
