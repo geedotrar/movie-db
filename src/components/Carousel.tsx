@@ -39,7 +39,7 @@ export default function CarouselImage() {
     <div>
       <Head>
         <title>Stevan Movie&apos;s DB</title>
-        <link rel="icon" href="/popcorn.png" />
+        <link rel="icon" type="image/png"  href="/popcorn.png" />
       </Head>
 
       <Carousel

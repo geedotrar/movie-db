@@ -63,7 +63,7 @@ export default function HorrorMovies() {
     <div className="bg-cover min-h-screen background-horror relative">
       <Head>
         <title>Stevan Movie&apos;s DB - Horror</title>
-        <link rel="icon" href="/popcorn.png" />
+        <link rel="icon" type="image/png"  href="/popcorn.png" />
       </Head>
 
       {loading && <LoadingOverlay />}

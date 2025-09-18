@@ -63,7 +63,7 @@ export default function DramaMovies() {
     <div className="bg-cover min-h-screen background-drama relative">
       <Head>
         <title>Stevan Movie&apos;s DB - Drama</title>
-        <link rel="icon" href="/popcorn.png" />
+        <link rel="icon" type="image/png"  href="/popcorn.png" />
       </Head>
 
       <Navbar />

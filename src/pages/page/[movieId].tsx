@@ -52,7 +52,7 @@ const MovieTrailer = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center relative px-4 py-10">
        <Head>
         <title>Stevan Movie&apos;s DB {movieData ? `- ${movieData.title}` : ""}</title>
-        <link rel="icon" href="/popcorn.png" />
+        <link rel="icon" type="image/png"  href="/popcorn.png" />
       </Head>
 
       {loading && <LoadingOverlay />}

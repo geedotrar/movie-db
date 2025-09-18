@@ -63,7 +63,7 @@ export default function PopularMovies() {
     <div className="bg-cover min-h-screen background relative">
       <Head>
         <title>Stevan Movie&apos;s DB - Popular</title>
-        <link rel="icon" href="/popcorn.png" />
+        <link rel="icon" type="image/png"  href="/popcorn.png" />
       </Head>
 
       {loading && <LoadingOverlay />}
